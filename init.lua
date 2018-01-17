@@ -259,6 +259,27 @@ for idx = 0,4 do
 		tiles = tiles_data,
 		drawtype = "nodebox",
         drop = node_name,
+		tube = {
+			insert_object = function(pos, node, stack, direction)
+				local meta = minetest.get_meta(pos)
+				local inv = meta:get_inventory()
+				if automatic == 0 then
+					local meta = minetest.get_meta(pos)
+					swap_node(pos, meta, true)
+				else
+					minetest.get_node_timer(pos):start(1.0)
+				end
+				return inv:add_item("src", stack)
+			end,
+			can_insert = function(pos, node, stack, direction)
+				local meta = minetest.get_meta(pos)
+				local inv = meta:get_inventory()
+				return inv:room_for_item("src", stack)
+			end,
+			input_inventory = "dst",
+			connect_sides = {left = 1, right = 1, front = 1, back = 1, bottom = 1, top = 1}
+		}
+		
 		node_box = {
 			type = "fixed",
 			fixed = nodebox_data,
@@ -284,7 +305,9 @@ for idx = 0,4 do
 		after_place_node = function(pos, placer)
 			local meta = minetest.get_meta(pos)
 			meta:set_string("infotext", "Gravel Sieve")
+			pipeworks.after_place(pos, placer)
 		end,
+		after_dig_node = pipeworks.after_dig,
 			
 		on_metadata_inventory_move = function(pos)
 			if automatic == 0 then
