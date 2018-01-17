@@ -278,7 +278,7 @@ for idx = 0,4 do
 			end,
 			input_inventory = "dst",
 			connect_sides = {left = 1, right = 1, front = 1, back = 1, bottom = 1, top = 1}
-		}
+		},
 		
 		node_box = {
 			type = "fixed",
